@@ -45,6 +45,7 @@ def main_cli(input: str, product: str, vendor: str, version: str, n: int):
     mp.set_start_method('spawn')
     q = mp.Queue()
 
+    print("Processing CVE files...")
     processes = []
     for i in range(n):
         p = mp.Process(target=process_CVE, args=(q, filelist[i*chunk_size:(i+1)*chunk_size], product, version, vendor))
@@ -53,6 +54,8 @@ def main_cli(input: str, product: str, vendor: str, version: str, n: int):
 
     for p in processes:
         p.join()
+    print("Done!")
 
-    for (filename, status, product, version) in iter(q.get, None):
+    while not q.empty():
+        filename, status, product, version = q.get_nowait()
         print(f"{filename}: {status.name} for {product} {version}")
