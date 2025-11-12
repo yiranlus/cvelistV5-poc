@@ -63,3 +63,5 @@ def main_cli(input: str, product: str, vendor: str, version: str, n: int):
             print(f"{filename}: {status.name} for {product} {version}")
         except Empty:
             break
+
+    q.close()
