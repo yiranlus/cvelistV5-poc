@@ -8,6 +8,7 @@ CLI interface for cvelistV5 proof of concept tool.
 import click
 from glob import glob
 import multiprocessing as mp
+from multiprocessing.queues import Empty
 
 from . import __version__
 from .process import process_CVE
@@ -56,6 +57,9 @@ def main_cli(input: str, product: str, vendor: str, version: str, n: int):
         p.join()
     print("Done!")
 
-    while not q.empty():
-        filename, status, product, version = q.get_nowait()
-        print(f"{filename}: {status.name} for {product} {version}")
+    while True:
+        try:
+            filename, status, product, version = q.get_nowait()
+            print(f"{filename}: {status.name} for {product} {version}")
+        except Empty:
+            break
