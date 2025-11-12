@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cvelistV5-poc"
+requires-python = ">=3.10"
 dynamic = ["version"]
 
 authors = [
