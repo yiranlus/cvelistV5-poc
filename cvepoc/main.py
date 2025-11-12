@@ -60,7 +60,7 @@ def main_cli(input: str, product: str, vendor: str, version: str, n: int):
     while True:
         try:
             filename, status, product, version = q.get_nowait()
-            print(f"{filename}: {status.name} for {product} {version}")
+            print(f"{filename}: {status.value} for {product} {version}")
         except Empty:
             break
 
