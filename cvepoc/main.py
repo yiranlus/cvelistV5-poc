@@ -67,5 +67,5 @@ def main_cli(input: str, product: str, vendor: str, version: str, n: int):
     q.close()
     cve_list.sort(key=lambda x: x[0])
 
-    for filename, status, product, vendor in cve_list:
-        print(f"{filename}: {status.value} for {product} by {vendor}")
+    for filename, status, product, vendor, version in cve_list:
+        print(f"{filename}: {status.value} for {product} {version} by {vendor}")

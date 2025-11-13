@@ -48,7 +48,8 @@ def process_CVE(q: Queue, filelist: list[str], product: str, version: str, vendo
                                               version,
                                               default_status),
                                product,
-                               container["vendor"])
+                               container["vendor"],
+                               version)
                         )
                 except KeyError:
                     pass
