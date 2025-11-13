@@ -3,9 +3,23 @@ Utility functions for cvelistV5 PoC
 """
 
 import semver
+import json
 from .base import Status
 
-__all__ = ["match_name", "match_vendor", "check_affected"]
+__all__ = ["read_cve", "match_name", "match_vendor", "check_affected"]
+
+def read_cve(filename: str) -> dict:
+    """Read CVE file
+
+    Args:
+        filename (str): CVE file path
+
+    Returns:
+        dict: CVE data
+    """
+    with open(filename, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
 
 def match_name(name: str, target: str) -> bool:
     """Match product name
@@ -35,7 +49,7 @@ def match_vendor(vendor: str | None, target: str | None) -> bool:
     if target is None:
         return True
 
-    if vendor is None:
+    if vendor is None or vendor == "*" or vendor == "n/a":
         return False
 
     return vendor.lower() == target.lower()

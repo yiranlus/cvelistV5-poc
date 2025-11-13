@@ -5,7 +5,7 @@ from multiprocessing import Queue
 import json, os
 
 from .base import Status
-from .utils import match_name, check_affected, match_vendor
+from .utils import read_cve, match_name, check_affected, match_vendor
 
 def process_CVE(q: Queue, filelist: list[str], product: str, version: str, vendor: str | None) -> None:
     """Process CVE files
@@ -19,36 +19,36 @@ def process_CVE(q: Queue, filelist: list[str], product: str, version: str, vendo
     """
 
     for filename in filelist:
-        with open(filename, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = read_cve(filename)
 
-            # Check if there is data["containers"]["cna"]["affected"]
-            if (
-                "containers" in data
-                and "cna" in data["containers"]
-                and "affected" in data["containers"]["cna"]
-            ):
-                # Iterate over each affected product
-                for container in data["containers"]["cna"]["affected"]:
+        # Check if there is data["containers"]["cna"]["affected"]
+        if (
+            "containers" in data
+            and "cna" in data["containers"]
+            and "affected" in data["containers"]["cna"]
+        ):
+            # Iterate over each affected product
+            for container in data["containers"]["cna"]["affected"]:
 
-                    # Set default status
-                    default_status = Status.UNKNOWN
-                    if "defaultStatus" in container:
-                        if container["defaultStatus"] == "affected":
-                            default_status = Status.AFFECTED
-                        elif container["defaultStatus"] == "unaffected":
-                            default_status = Status.NOT_AFFECTED
+                # Set default status
+                default_status = Status.UNKNOWN
+                if "defaultStatus" in container:
+                    if container["defaultStatus"] == "affected":
+                        default_status = Status.AFFECTED
+                    elif container["defaultStatus"] == "unaffected":
+                        default_status = Status.NOT_AFFECTED
 
-                    try:
-                        if (
-                            match_name(container["product"], product)
-                            and match_vendor(container["vendor"], vendor)
-                        ):
-                            q.put((os.path.basename(filename),
-                                check_affected(container.get("versions", []),
-                                                version,
-                                                default_status),
-                                product,
-                                version))
-                    except KeyError:
-                        pass
+                try:
+                    if (
+                        match_name(container["product"], product)
+                        and match_vendor(container["vendor"], vendor)
+                    ):
+                        q.put((os.path.basename(filename),
+                               check_affected(container.get("versions", []),
+                                              version,
+                                              default_status),
+                               product,
+                               container["vendor"])
+                        )
+                except KeyError:
+                    pass
