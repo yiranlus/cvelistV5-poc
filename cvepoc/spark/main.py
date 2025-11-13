@@ -92,6 +92,6 @@ def main_cli(master: str, input: str, product: str, vendor: str, version: str):
 
     for file_path, matches in result.collect():
         for status, prod, vendor, version in matches:
-            print(f"{file_path}: {status.value} for {prod} {version} by {vendor}")
+            print(f"{os.path.basename(file_path)}: {status.value} for {prod} {version} by {vendor}")
 
     sc.stop()
