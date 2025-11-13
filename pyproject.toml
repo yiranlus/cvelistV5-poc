@@ -24,6 +24,11 @@ Repository = "https://github.com/CVEProject/cvelistV5.git"
 [project.scripts]
 cvepoc = "cvepoc.main:main_cli"
 
+[project.optional-dependencies]
+spark = [
+    "pyspark==4.0.1",
+]
+
 [tool.setuptools]
 packages = ["cvepoc"]
 
