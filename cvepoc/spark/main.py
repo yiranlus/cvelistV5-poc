@@ -69,10 +69,11 @@ def main_cli(master: str, input: str, product: str, vendor: str, version: str):
     sc = SparkContext(conf=conf)
 
     # Temporary solution since there is no shared filesystem
-    input_abs = os.path.expanduser("~/projects/cvlistV5/cves/")
+    input_abs = os.path.expanduser("~/projects/cvelistV5/cves/")
     # input_abs = os.path.abspath(input)
 
     filelist = glob(f"{input_abs}/**/CVE-*.json", recursive=True)
+    print(filelist[:10])
     filelist_dist = sc.parallelize(filelist)
 
     mapped_entries = filelist_dist.map(
