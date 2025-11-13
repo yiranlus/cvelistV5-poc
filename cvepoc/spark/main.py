@@ -53,8 +53,7 @@ def match_containers(containers: list, product: str, vendor: str, version: str) 
 @click.option("-r", "--version",
               type=click.STRING,
               required=True, help="product version")
-@click.option("-n", default=10, help="number of processes to use")
-def main_cli(master: str, input: str, product: str, vendor: str, version: str, n: int):
+def main_cli(master: str, input: str, product: str, vendor: str, version: str):
     """CLI interface for cvelistV5 PoC tool.
 
     Args:
