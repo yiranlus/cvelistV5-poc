@@ -6,6 +6,7 @@ import sys
 from glob import glob
 import click
 from pyspark import SparkContext, SparkConf
+import os
 
 from ..base import Status
 from ..utils import read_cve, match_name, check_affected, match_vendor
@@ -66,8 +67,9 @@ def main_cli(master: str, input: str, product: str, vendor: str, version: str):
     """
     conf = SparkConf().setAppName(sys.argv[0]).setMaster(master)
     sc = SparkContext(conf=conf)
+    input_abs = os.path.abspath(input)
 
-    filelist = glob(f"{input}/**/CVE-*.json", recursive=True)
+    filelist = glob(f"{input_abs}/**/CVE-*.json", recursive=True)
     filelist_dist = sc.parallelize(filelist)
 
     mapped_entries = filelist_dist.map(
