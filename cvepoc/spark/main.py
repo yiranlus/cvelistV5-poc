@@ -2,10 +2,10 @@
 Spark version of cvepoc
 """
 
-import click
-from pyspark import SparkContext, SparkConf
 import sys
 from glob import glob
+import click
+from pyspark import SparkContext, SparkConf
 
 from ..base import Status
 from ..utils import read_cve, match_name, check_affected, match_vendor
